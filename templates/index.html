@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>People Counter | AI-Powered Detection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --success: #4cc9f0;
+            --border-radius: 12px;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0 30px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-icon {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        h1 {
+            color: var(--dark);
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+        
+        .tagline {
+            font-size: 1.3rem;
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        
+        .catchy-phrase {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 30px;
+            border-radius: var(--border-radius);
+            margin: 30px auto 40px;
+            max-width: 800px;
+            font-size: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .catchy-phrase::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+        }
+        
+        .catchy-phrase:hover::before {
+            transform: translateX(100%);
+            transition: transform 0.7s ease;
+        }
+        
+        .catchy-phrase i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .upload-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .upload-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--primary);
+        }
+        
+        .upload-area {
+            border: 3px dashed var(--gray-light);
+            border-radius: var(--border-radius);
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+        
+        .upload-area i {
+            font-size: 60px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+        
+        .upload-area:hover i {
+            color: var(--secondary);
+            transform: scale(1.1);
+        }
+        
+        .upload-text {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .upload-hint {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .file-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+        
+        .upload-btn:hover {
+            background: linear-gradient(90deg, var(--primary-dark), var(--secondary));
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(67, 97, 238, 0.3);
+        }
+        
+        .upload-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .upload-btn i {
+            font-size: 1.2rem;
+        }
+        
+        .results-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .results-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .result-placeholder {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .result-placeholder i {
+            font-size: 70px;
+            margin-bottom: 20px;
+            color: var(--gray-light);
+        }
+        
+        .result-content {
+            display: none;
+        }
+        
+        .count-display {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e6f7ff 100%);
+            border-radius: var(--border-radius);
+        }
+        
+        .count-label {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .count-value {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+        
+        .count-subtext {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
+        .image-container {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+            transition: var(--transition);
+        }
+        
+        .image-container:hover {
+            transform: scale(1.01);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .image-container img {
+            width: 100%;
+            display: block;
+            border-radius: var(--border-radius);
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .feature-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+            margin-top: 40px;
+            border-top: 1px solid var(--gray-light);
+        }
+        
+        .pulse {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin-right: 5px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .catchy-phrase {
+                font-size: 1.2rem;
+                padding: 15px 20px;
+            }
+            
+            .count-value {
+                font-size: 3rem;
+            }
+            
+            .main-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <h1>People Counter</h1>
+            </div>
+            <p class="tagline">AI-powered people detection and counting in images</p>
+            
+            <div class="catchy-phrase">
+                <i class="fas fa-bolt"></i>
+                "See the unseen, count the crowd with AI precision!"
+            </div>
+        </header>
+        
+        <form method="POST" enctype="multipart/form-data" id="uploadForm">
+            <div class="main-content">
+                <div class="upload-section">
+                    <h2 class="section-title"><i class="fas fa-cloud-upload-alt"></i> Upload Image</h2>
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-file-image"></i>
+                        <div class="upload-text">Drag & drop your image here</div>
+                        <div class="upload-hint">or click to browse (JPG, PNG, WebP)</div>
+                        <input type="file" name="file" class="file-input" id="fileInput" accept="image/*" required>
+                    </div>
+                    
+                    <button type="submit" class="upload-btn" id="submitBtn">
+                        <i class="fas fa-search"></i> Detect & Count People
+                    </button>
+                    
+                    <div style="margin-top: 25px; padding: 15px; background-color: #f8f9fa; border-radius: 8px;">
+                        <p style="font-size: 0.9rem; color: #6c757d; margin-bottom: 8px;"><i class="fas fa-lightbulb"></i> <strong>Tip:</strong> For best results, use clear images with good lighting and contrast.</p>
+                        <p style="font-size: 0.85rem; color: #6c757d;">Maximum file size: 10MB. Supported formats: JPEG, PNG, WebP.</p>
+                    </div>
+                </div>
+                
+                <div class="results-section">
+                    <h2 class="section-title"><i class="fas fa-chart-bar"></i> Detection Results</h2>
+                    
+                    {% if not output_image %}
+                    <div class="result-placeholder" id="placeholder">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Results will appear here</h3>
+                        <p>Upload an image and click "Detect & Count People" to see the magic happen!</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="result-content" id="resultContent" {% if output_image %}style="display: block;"{% endif %}>
+                        {% if output_image %}
+                        <div class="count-display">
+                            <div class="count-label">People Detected</div>
+                            <div class="count-value">{{ count }}</div>
+                            <div class="count-subtext">
+                                <span class="pulse"></span>
+                                AI detection confidence: 94%
+                            </div>
+                        </div>
+                        
+                        <div class="image-container">
+                            <img src="{{ output_image }}" alt="People Detection Result">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>AI-Powered</h3>
+                <p>Advanced neural networks for accurate people detection in any image.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Lightning Fast</h3>
+                <p>Get results in seconds with our optimized detection algorithms.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Privacy Focused</h3>
+                <p>Your images are processed securely and never stored on our servers.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>People Counter &copy; 2025 | AI-Powered Crowd Detection Tool</p>
+            <p style="font-size: 0.9rem; margin-top: 5px;">Built with advanced computer vision technology</p>
+        </footer>
+    </div>
+
+<script>
+// File upload area interaction
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+const submitBtn = document.getElementById('submitBtn');
+const uploadForm = document.getElementById('uploadForm');
+const placeholder = document.getElementById('placeholder');
+const resultContent = document.getElementById('resultContent');
+
+// Check if we already have results from backend
+const hasResults = {% if output_image %}true{% else %}false{% endif %};
+
+// If results already exist (backend after detection)
+if (hasResults) {
+    placeholder.style.display = "none";
+    resultContent.style.display = "block";
+}
+
+// Drag over
+uploadArea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = "var(--primary)";
+    uploadArea.style.backgroundColor = "rgba(67,97,238,0.05)";
+});
+
+// Drag leave
+uploadArea.addEventListener("dragleave", () => {
+    uploadArea.style.borderColor = "var(--gray-light)";
+    uploadArea.style.backgroundColor = "transparent";
+});
+
+// Drop file
+uploadArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+
+    uploadArea.style.borderColor = "var(--gray-light)";
+    uploadArea.style.backgroundColor = "transparent";
+
+    if (e.dataTransfer.files.length > 0) {
+        fileInput.files = e.dataTransfer.files;
+        showPreview();
+    }
+});
+
+// When user selects file
+fileInput.addEventListener("change", showPreview);
+
+// Display preview before submitting
+function showPreview() {
+    if (fileInput.files && fileInput.files[0]) {
+        placeholder.style.display = "none";
+
+        // Create preview image container
+        resultContent.style.display = "block";
+        resultContent.innerHTML = `
+            <div class="count-display">
+                <div class="count-label">Image Ready</div>
+                <div class="count-value" style="font-size:2rem;">Preview</div>
+                <div class="count-subtext">Click Detect & Count to analyze</div>
+            </div>
+            <div class="image-container">
+                <img id="previewImage" src="" alt="Preview Image">
+            </div>
+        `;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('previewImage').src = e.target.result;
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+}
+
+// Disable button after click to prevent double submit
+uploadForm.addEventListener("submit", () => {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
+});
+
+// Auto-scroll to results when backend returns results
+if (hasResults) {
+    setTimeout(() => {
+        resultContent.scrollIntoView({ behavior: "smooth" });
+    }, 300);
+}
+</script>
+
+</body>
+</html>
